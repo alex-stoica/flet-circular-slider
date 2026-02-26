@@ -1,7 +1,0 @@
-site_name: FletCircularSlider
-
-theme:
-  name: "material"
-
-plugins:
-  - mkdocstrings

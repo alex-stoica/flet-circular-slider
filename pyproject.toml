@@ -1,6 +1,6 @@
 [project]
 name = "flet-circular-slider"
-version = "0.1.0"
+version = "0.1.1"
 description = "Circular/radial slider control for Flet, wrapping sleek_circular_slider Flutter package"
 authors = [
     { name = "Alex Stoica" }

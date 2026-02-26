@@ -1,6 +1,6 @@
 name: flet_circular_slider
 description: Flet extension wrapping sleek_circular_slider Flutter package
-version: 0.1.0
+version: 0.1.1
 publish_to: none
 
 environment:
