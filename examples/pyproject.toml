@@ -1,0 +1,15 @@
+[project]
+name = "flet-circular-slider-examples"
+version = "0.0.0"
+requires-python = ">=3.10"
+dependencies = [
+    "flet>=0.80.5",
+    "flet-circular-slider",
+]
+
+[tool.flet.dev_packages]
+flet-circular-slider = ".."
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

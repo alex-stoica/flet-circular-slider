@@ -1,0 +1,1 @@
+from flet_circular_slider.flet_circular_slider import FletCircularSlider

@@ -1,0 +1,35 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+*.so
+
+# Build / Distribution
+build/
+dist/
+eggs/
+sdist/
+wheels/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Local tool settings
+.claude/
+
+# Flet / Flutter build artifacts
+examples/build/
+
+# Poetry
+poetry.lock
