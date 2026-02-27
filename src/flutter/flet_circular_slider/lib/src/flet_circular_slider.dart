@@ -20,6 +20,14 @@ class FletCircularSliderControl extends StatelessWidget {
     double angleRange = control.getDouble("angle_range", 240)!;
     bool counterClockwise = control.getBool("counter_clockwise", false)!;
     bool animationEnabled = control.getBool("animation_enabled", true)!;
+    int? divisions = control.getInt("divisions");
+
+    // Label map (pre-computed by Python label_formatter, sent as native msgpack map)
+    Map? labelMapRaw = control.get("label_map");
+    Map<String, String>? labelMap;
+    if (labelMapRaw != null) {
+      labelMap = labelMapRaw.map((k, v) => MapEntry(k.toString(), v.toString()));
+    }
 
     // Track and bar widths
     double progressBarWidth = control.getDouble("progress_bar_width", sliderSize / 10)!;
@@ -51,6 +59,12 @@ class FletCircularSliderControl extends StatelessWidget {
     String? topLabel = control.getString("top_label");
     String? bottomLabel = control.getString("bottom_label");
 
+    double snapValue(double value) {
+      if (divisions == null || divisions! <= 0) return value;
+      double step = (max - min) / divisions!;
+      return ((value - min) / step).roundToDouble() * step + min;
+    }
+
     Widget myControl = SleekCircularSlider(
       min: min,
       max: max,
@@ -77,24 +91,56 @@ class FletCircularSliderControl extends StatelessWidget {
           topLabelText: topLabel ?? '',
           bottomLabelText: bottomLabel ?? '',
           modifier: (double value) {
-            return value.ceil().toString();
+            String key = snapValue(value).round().toString();
+            if (labelMap != null && labelMap.containsKey(key)) {
+              return labelMap[key]!;
+            }
+            return key;
           },
         ),
       ),
       onChange: (double value) {
-        control.triggerEvent("change", value.toString());
+        control.triggerEvent("change", snapValue(value).toString());
       },
       onChangeStart: (double value) {
-        control.triggerEvent("change_start", value.toString());
+        control.triggerEvent("change_start", snapValue(value).toString());
       },
       onChangeEnd: (double value) {
-        control.triggerEvent("change_end", value.toString());
+        control.triggerEvent("change_end", snapValue(value).toString());
       },
       innerWidget: (double value) {
+        double snapped = snapValue(value);
+        // Label map lookup takes priority
+        if (labelMap != null) {
+          String key = snapped.round().toString();
+          String displayText = labelMap.containsKey(key) ? labelMap[key]! : key;
+          return Center(child: Text(
+            displayText,
+            style: TextStyle(
+              fontSize: sliderSize / 5,
+              fontWeight: FontWeight.bold,
+              color: control.getColor("inner_text_color", context) ?? progressBarColors.last,
+            ),
+          ));
+        }
         String? innerText = control.getString("inner_text");
         if (innerText != null) {
+          String displayText = innerText;
+          if (displayText.contains("{duration}")) {
+            int mins = snapped.round();
+            String formatted;
+            if (mins < 60) {
+              formatted = "${mins}m";
+            } else {
+              int h = mins ~/ 60;
+              int m = mins % 60;
+              formatted = m > 0 ? "${h}h ${m}m" : "${h}h";
+            }
+            displayText = displayText.replaceAll("{duration}", formatted);
+          }
+          displayText = displayText.replaceAll("{value}", snapped.round().toString());
           return Center(child: Text(
-            innerText.replaceAll("{value}", value.ceil().toString()),
+            displayText,
             style: TextStyle(
               fontSize: sliderSize / 8,
               fontWeight: FontWeight.bold,
@@ -103,7 +149,7 @@ class FletCircularSliderControl extends StatelessWidget {
           ));
         }
         return Center(child: Text(
-          value.ceil().toString(),
+          snapped.round().toString(),
           style: TextStyle(
             fontSize: sliderSize / 5,
             fontWeight: FontWeight.bold,

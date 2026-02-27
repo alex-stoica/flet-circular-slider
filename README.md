@@ -38,10 +38,35 @@ def main(page: ft.Page):
 ft.run(main)
 ```
 
+## Label Formatting
+
+Use `label_formatter` to transform the numeric value into any string. The callback runs once per step at build time, so the slider displays your formatted labels (e.g. "1h 30m") instead of raw numbers.
+
+```python
+def format_duration(minutes: float) -> str:
+    m = int(minutes)
+    if m == 0:
+        return "0m"
+    h, rem = divmod(m, 60)
+    if h == 0:
+        return f"{rem}m"
+    return f"{h}h {rem}m" if rem else f"{h}h"
+
+slider = FletCircularSlider(
+    min=0, max=200, value=90,
+    divisions=200,
+    label_formatter=format_duration,
+    size=280,
+)
+```
+
+`divisions` controls the number of discrete steps. When `label_formatter` is set, it pre-computes a label for each step and sends the mapping to the Flutter side.
+
 ## Examples
 
 - **[basic.py](examples/basic.py)** — Minimal slider with `on_change` event
 - **[advanced.py](examples/advanced.py)** — Custom colors, geometry, labels, sizing, and all three events
+- **[duration_picker.py](examples/duration_picker.py)** — Duration picker using `label_formatter` to display "1h 30m" style labels
 
 ## Properties
 
@@ -68,9 +93,13 @@ ft.run(main)
 | `hide_shadow` | `bool` | `False` | Remove the shadow |
 | `inner_text_color` | `ColorValue` | gradient end | Center text color |
 | | | | |
+| `divisions` | `int` | none | Snap to N evenly-spaced steps |
+| | | | |
 | `inner_text` | `str` | raw value | Center text (`{value}` placeholder) |
 | `top_label` | `str` | none | Label above center |
 | `bottom_label` | `str` | none | Label below center |
+| `label_formatter` | `Callable` | none | Callback `(float) -> str` to format displayed value |
+| `label_map` | `dict` | none | Pre-computed `{value: label}` map (set automatically by `label_formatter`) |
 
 ## Events
 

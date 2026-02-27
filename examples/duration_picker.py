@@ -1,4 +1,4 @@
-"""Duration picker example — showcases label_formatter callback."""
+"""Duration picker — label_formatter converts minutes to human-readable time."""
 
 import flet as ft
 from flet_circular_slider import FletCircularSlider

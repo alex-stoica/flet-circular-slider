@@ -1,4 +1,5 @@
-from typing import Optional
+from dataclasses import field
+from typing import Callable, Optional
 
 import flet as ft
 from flet.controls.control_event import ControlEventHandler
@@ -15,6 +16,7 @@ class FletCircularSlider(ft.LayoutControl):
     min: float = 0
     max: float = 100
     value: float = 50
+    divisions: Optional[int] = None
 
     # Appearance
     size: float = 150
@@ -41,8 +43,27 @@ class FletCircularSlider(ft.LayoutControl):
     bottom_label: Optional[str] = None
     inner_text: Optional[str] = None
     inner_text_color: Optional[ft.ColorValue] = None
+    label_formatter: Optional[Callable[[float], str]] = field(default=None, metadata={"skip": True})
+    label_map: Optional[dict[str, str]] = None
 
     # Events
     on_change: Optional[ControlEventHandler["FletCircularSlider"]] = None
     on_change_start: Optional[ControlEventHandler["FletCircularSlider"]] = None
     on_change_end: Optional[ControlEventHandler["FletCircularSlider"]] = None
+
+    def before_update(self):
+        super().before_update()
+        if self.label_formatter is not None:
+            if self.divisions is not None and self.divisions > 0:
+                step = (self.max - self.min) / self.divisions
+                self.label_map = {}
+                for i in range(self.divisions + 1):
+                    val = self.min + i * step
+                    snapped = round(val)
+                    self.label_map[str(snapped)] = self.label_formatter(
+                        float(snapped)
+                    )
+            else:
+                self.label_map = {}
+                for v in range(int(self.min), int(self.max) + 1):
+                    self.label_map[str(v)] = self.label_formatter(float(v))
