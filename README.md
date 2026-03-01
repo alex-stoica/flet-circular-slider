@@ -12,10 +12,10 @@ Then register it as a Flet extension in your project's `pyproject.toml` so the F
 
 ```toml
 [project]
-dependencies = ["flet-circular-slider>=0.1.0"]
+dependencies = ["flet-circular-slider>=0.4.0"]
 
 [tool.flet.dev_packages]
-flet-circular-slider = ">=0.1.0"
+flet-circular-slider = ">=0.4.0"
 ```
 
 Then run `flet build` (see [Building](#building) below). `flet run` alone won't compile extensions — you'll get "Unknown control" without a build step.
@@ -75,7 +75,7 @@ slider = FletCircularSlider(
 )
 ```
 
-`divisions` controls the number of discrete steps. When `label_formatter` is set, it pre-computes a label for each step and sends the mapping to the Flutter side.
+`divisions` is required when using `label_formatter` — it controls how many labels are pre-computed and sent to the Flutter side.
 
 ## Examples
 
