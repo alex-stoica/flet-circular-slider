@@ -46,6 +46,9 @@ class FletCircularSlider(ft.LayoutControl):
     label_formatter: Optional[Callable[[float], str]] = field(default=None, metadata={"skip": True})
     label_map: Optional[dict[str, str]] = None
 
+    # Throttle
+    change_throttle_ms: Optional[int] = None
+
     # Events
     on_change: Optional[ControlEventHandler["FletCircularSlider"]] = None
     on_change_start: Optional[ControlEventHandler["FletCircularSlider"]] = None
@@ -64,6 +67,7 @@ class FletCircularSlider(ft.LayoutControl):
                         float(snapped)
                     )
             else:
-                self.label_map = {}
-                for v in range(int(self.min), int(self.max) + 1):
-                    self.label_map[str(v)] = self.label_formatter(float(v))
+                raise ValueError(
+                    "label_formatter requires divisions to be set — "
+                    "it controls how many labels are pre-computed"
+                )
