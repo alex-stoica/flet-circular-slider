@@ -5,6 +5,12 @@ import flet as ft
 from flet.controls.control_event import ControlEventHandler
 
 
+def _canonical_key(val: float) -> str:
+    if val == int(val):
+        return str(int(val))
+    return f"{val:.10f}".rstrip("0").rstrip(".")
+
+
 @ft.control("flet_circular_slider")
 class FletCircularSlider(ft.LayoutControl):
     """A circular/radial slider control wrapping sleek_circular_slider Flutter package.
@@ -58,14 +64,15 @@ class FletCircularSlider(ft.LayoutControl):
         super().before_update()
         if self.label_formatter is not None:
             if self.divisions is not None and self.divisions > 0:
+                cache_key = (self.min, self.max, self.divisions, id(self.label_formatter))
+                if getattr(self, "_label_cache_key", None) == cache_key:
+                    return
                 step = (self.max - self.min) / self.divisions
                 self.label_map = {}
                 for i in range(self.divisions + 1):
                     val = self.min + i * step
-                    snapped = round(val)
-                    self.label_map[str(snapped)] = self.label_formatter(
-                        float(snapped)
-                    )
+                    self.label_map[_canonical_key(val)] = self.label_formatter(val)
+                self._label_cache_key = cache_key
             else:
                 raise ValueError(
                     "label_formatter requires divisions to be set — "

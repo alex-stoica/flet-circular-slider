@@ -4,6 +4,15 @@ import 'package:flet/flet.dart';
 import 'package:flutter/material.dart';
 import 'package:sleek_circular_slider/sleek_circular_slider.dart';
 
+String _canonicalKey(double val) {
+  if (val == val.roundToDouble() && val.abs() < 1e15) {
+    return val.toInt().toString();
+  }
+  return val.toStringAsFixed(10)
+      .replaceAll(RegExp(r'0+$'), '')
+      .replaceAll(RegExp(r'\.$'), '');
+}
+
 class FletCircularSliderControl extends StatefulWidget {
   final Control control;
 
@@ -18,37 +27,34 @@ class FletCircularSliderControl extends StatefulWidget {
 
 class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
   Timer? _throttleTimer;
+  String? _lastFiredKey;
+  String? _pendingKey;
   double? _pendingValue;
 
-  double _snapValue(double value) {
-    int? divisions = widget.control.getInt("divisions");
-    if (divisions == null || divisions <= 0) return value;
-    double min = widget.control.getDouble("min", 0)!;
-    double max = widget.control.getDouble("max", 100)!;
-    double step = (max - min) / divisions;
-    return ((value - min) / step).roundToDouble() * step + min;
-  }
-
-  void _fireChange(double value) {
+  void _fireChange(double value, String key) {
+    if (key == _lastFiredKey) return;
+    _lastFiredKey = key;
     widget.control.triggerEvent("change", value.toString());
   }
 
   void _flushPending() {
     if (!mounted) return;
-    if (_pendingValue != null) {
-      _fireChange(_pendingValue!);
+    if (_pendingValue != null && _pendingKey != null) {
+      _fireChange(_pendingValue!, _pendingKey!);
       _pendingValue = null;
+      _pendingKey = null;
     }
   }
 
-  void _onChangeThrottled(double rawValue, int throttleMs) {
-    double snapped = _snapValue(rawValue);
+  void _onChangeThrottled(double snapped, String key, int throttleMs) {
     if (_throttleTimer == null || !_throttleTimer!.isActive) {
-      _fireChange(snapped);
+      _fireChange(snapped, key);
       _pendingValue = null;
+      _pendingKey = null;
       _throttleTimer = Timer(Duration(milliseconds: throttleMs), _flushPending);
     } else {
       _pendingValue = snapped;
+      _pendingKey = key;
     }
   }
 
@@ -88,23 +94,32 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
     bool hideShadow = widget.control.getBool("hide_shadow", false)!;
 
     // Gradient colors for progress bar
-    List<Color> progressBarColors = [];
-    String? startColor = widget.control.getString("progress_bar_start_color");
-    String? endColor = widget.control.getString("progress_bar_end_color");
-    if (startColor != null && endColor != null) {
-      Color? sc = widget.control.getColor("progress_bar_start_color", context);
-      Color? ec = widget.control.getColor("progress_bar_end_color", context);
-      if (sc != null && ec != null) {
-        progressBarColors = [sc, ec];
-      }
-    }
-    if (progressBarColors.isEmpty) {
+    List<Color> progressBarColors;
+    Color? sc = widget.control.getColor("progress_bar_start_color", context);
+    Color? ec = widget.control.getColor("progress_bar_end_color", context);
+    if (sc != null && ec != null) {
+      progressBarColors = [sc, ec];
+    } else {
       progressBarColors = [const Color(0xFF1E003B), const Color(0xFFEC008A), const Color(0xFF6285DA)];
     }
 
     // Info properties
     String? topLabel = widget.control.getString("top_label");
     String? bottomLabel = widget.control.getString("bottom_label");
+
+    // Hoist per-frame values out of closures
+    Color innerTextColor = widget.control.getColor("inner_text_color", context) ?? progressBarColors.last;
+    String? innerText = widget.control.getString("inner_text");
+    int? throttleMs = widget.control.getInt("change_throttle_ms");
+
+    // Local snap function — replaces instance method, avoids re-reading control properties per frame
+    int? divisions = widget.control.getInt("divisions");
+    double? step = (divisions != null && divisions > 0) ? (max - min) / divisions : null;
+
+    double snapValue(double value) {
+      if (step == null) return value;
+      return ((value - min) / step!).roundToDouble() * step! + min;
+    }
 
     Widget myControl = SleekCircularSlider(
       min: min,
@@ -132,7 +147,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
           topLabelText: topLabel ?? '',
           bottomLabelText: bottomLabel ?? '',
           modifier: (double value) {
-            String key = _snapValue(value).round().toString();
+            String key = _canonicalKey(snapValue(value));
             if (labelMap != null && labelMap.containsKey(key)) {
               return labelMap[key]!;
             }
@@ -141,53 +156,53 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
         ),
       ),
       onChange: (double value) {
-        int? throttleMs = widget.control.getInt("change_throttle_ms");
+        double snapped = snapValue(value);
+        String key = _canonicalKey(snapped);
         if (throttleMs != null && throttleMs > 0) {
-          _onChangeThrottled(value, throttleMs);
+          _onChangeThrottled(snapped, key, throttleMs);
         } else {
-          widget.control.triggerEvent("change", _snapValue(value).toString());
+          _fireChange(snapped, key);
         }
       },
       onChangeStart: (double value) {
-        widget.control.triggerEvent("change_start", _snapValue(value).toString());
+        _lastFiredKey = null;
+        widget.control.triggerEvent("change_start", snapValue(value).toString());
       },
       onChangeEnd: (double value) {
-        widget.control.triggerEvent("change_end", _snapValue(value).toString());
+        widget.control.triggerEvent("change_end", snapValue(value).toString());
       },
       innerWidget: (double value) {
-        double snapped = _snapValue(value);
+        double snapped = snapValue(value);
+        String key = _canonicalKey(snapped);
         // Label map lookup takes priority
         if (labelMap != null) {
-          String key = snapped.round().toString();
           String displayText = labelMap.containsKey(key) ? labelMap[key]! : key;
           return Center(child: Text(
             displayText,
             style: TextStyle(
               fontSize: sliderSize / 5,
               fontWeight: FontWeight.bold,
-              color: widget.control.getColor("inner_text_color", context) ?? progressBarColors.last,
+              color: innerTextColor,
             ),
           ));
         }
-        String? innerText = widget.control.getString("inner_text");
         if (innerText != null) {
-          String displayText = innerText;
-          displayText = displayText.replaceAll("{value}", snapped.round().toString());
+          String displayText = innerText.replaceAll("{value}", key);
           return Center(child: Text(
             displayText,
             style: TextStyle(
               fontSize: sliderSize / 8,
               fontWeight: FontWeight.bold,
-              color: widget.control.getColor("inner_text_color", context) ?? progressBarColors.last,
+              color: innerTextColor,
             ),
           ));
         }
         return Center(child: Text(
-          snapped.round().toString(),
+          key,
           style: TextStyle(
             fontSize: sliderSize / 5,
             fontWeight: FontWeight.bold,
-            color: widget.control.getColor("inner_text_color", context) ?? progressBarColors.last,
+            color: innerTextColor,
           ),
         ));
       },
