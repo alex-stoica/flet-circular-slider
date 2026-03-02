@@ -12,10 +12,10 @@ Then register it as a Flet extension in your project's `pyproject.toml` so the F
 
 ```toml
 [project]
-dependencies = ["flet-circular-slider>=0.4.0"]
+dependencies = ["flet-circular-slider>=0.5.0"]
 
 [tool.flet.dev_packages]
-flet-circular-slider = ">=0.4.0"
+flet-circular-slider = ">=0.5.0"
 ```
 
 Then run `flet build` (see [Building](#building) below). `flet run` alone won't compile extensions — you'll get "Unknown control" without a build step.
@@ -83,6 +83,7 @@ slider = FletCircularSlider(
 - **[advanced.py](examples/advanced.py)** — Custom colors, geometry, labels, sizing, and all three events
 - **[duration_picker.py](examples/duration_picker.py)** — Duration picker using `label_formatter` to display "1h 30m" style labels
 - **[live_dashboard.py](examples/live_dashboard.py)** — Full dashboard with auto-animation, controller slider, and colored presets
+- **[feature_demo.py](examples/feature_demo.py)** — Disabled mode, text styling, and multi-color gradients
 
 ## Properties
 
@@ -103,11 +104,19 @@ slider = FletCircularSlider(
 | | | | |
 | `progress_bar_start_color` | `ColorValue` | purple | Gradient start color |
 | `progress_bar_end_color` | `ColorValue` | pink | Gradient end color |
+| `progress_bar_colors` | `list[ColorValue]` | none | Multi-color gradient (overrides start/end) |
 | `track_color` | `ColorValue` | light purple | Track color |
 | `dot_color` | `ColorValue` | white | Handle dot color |
 | `shadow_color` | `ColorValue` | blue | Shadow color |
 | `hide_shadow` | `bool` | `False` | Remove the shadow |
 | `inner_text_color` | `ColorValue` | gradient end | Center text color |
+| `inner_text_size` | `float` | auto | Override center text font size |
+| `top_label_color` | `ColorValue` | white70 | Top label text color |
+| `top_label_size` | `float` | `12` | Top label font size |
+| `bottom_label_color` | `ColorValue` | white70 | Bottom label text color |
+| `bottom_label_size` | `float` | `12` | Bottom label font size |
+| | | | |
+| `disabled` | `bool` | `False` | Disable interaction (dims to 50% opacity) |
 | | | | |
 | `divisions` | `int` | none | Snap to N evenly-spaced steps |
 | `change_throttle_ms` | `int` | none | Throttle `on_change` events (milliseconds) |

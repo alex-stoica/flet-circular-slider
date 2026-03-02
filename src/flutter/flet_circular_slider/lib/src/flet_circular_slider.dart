@@ -93,19 +93,41 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
     Color shadowColor = widget.control.getColor("shadow_color", context) ?? const Color(0xFF2C57C0);
     bool hideShadow = widget.control.getBool("hide_shadow", false)!;
 
-    // Gradient colors for progress bar
+    // Disabled mode
+    bool disabled = widget.control.getBool("disabled", false)!;
+
+    // Gradient colors for progress bar — multi-color list takes priority
     List<Color> progressBarColors;
-    Color? sc = widget.control.getColor("progress_bar_start_color", context);
-    Color? ec = widget.control.getColor("progress_bar_end_color", context);
-    if (sc != null && ec != null) {
-      progressBarColors = [sc, ec];
+    List? rawBarColors = widget.control.get("progress_bar_colors");
+    if (rawBarColors != null && rawBarColors.isNotEmpty) {
+      ThemeData theme = Theme.of(context);
+      progressBarColors = rawBarColors
+          .map((c) => parseColor(c.toString(), theme))
+          .whereType<Color>()
+          .toList();
+      if (progressBarColors.isEmpty) {
+        progressBarColors = [const Color(0xFF1E003B), const Color(0xFFEC008A), const Color(0xFF6285DA)];
+      }
     } else {
-      progressBarColors = [const Color(0xFF1E003B), const Color(0xFFEC008A), const Color(0xFF6285DA)];
+      Color? sc = widget.control.getColor("progress_bar_start_color", context);
+      Color? ec = widget.control.getColor("progress_bar_end_color", context);
+      if (sc != null && ec != null) {
+        progressBarColors = [sc, ec];
+      } else {
+        progressBarColors = [const Color(0xFF1E003B), const Color(0xFFEC008A), const Color(0xFF6285DA)];
+      }
     }
 
     // Info properties
     String? topLabel = widget.control.getString("top_label");
     String? bottomLabel = widget.control.getString("bottom_label");
+
+    // Text styling
+    double? innerTextSize = widget.control.getDouble("inner_text_size");
+    Color? topLabelColor = widget.control.getColor("top_label_color", context);
+    double? topLabelSize = widget.control.getDouble("top_label_size");
+    Color? bottomLabelColor = widget.control.getColor("bottom_label_color", context);
+    double? bottomLabelSize = widget.control.getDouble("bottom_label_size");
 
     // Hoist per-frame values out of closures
     Color innerTextColor = widget.control.getColor("inner_text_color", context) ?? progressBarColors.last;
@@ -146,6 +168,14 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
         infoProperties: InfoProperties(
           topLabelText: topLabel ?? '',
           bottomLabelText: bottomLabel ?? '',
+          topLabelStyle: TextStyle(
+            fontSize: topLabelSize ?? 12,
+            color: topLabelColor ?? Colors.white70,
+          ),
+          bottomLabelStyle: TextStyle(
+            fontSize: bottomLabelSize ?? 12,
+            color: bottomLabelColor ?? Colors.white70,
+          ),
           modifier: (double value) {
             String key = _canonicalKey(snapValue(value));
             if (labelMap != null && labelMap.containsKey(key)) {
@@ -155,7 +185,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
           },
         ),
       ),
-      onChange: (double value) {
+      onChange: disabled ? null : (double value) {
         double snapped = snapValue(value);
         String key = _canonicalKey(snapped);
         if (throttleMs != null && throttleMs > 0) {
@@ -164,11 +194,11 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
           _fireChange(snapped, key);
         }
       },
-      onChangeStart: (double value) {
+      onChangeStart: disabled ? null : (double value) {
         _lastFiredKey = null;
         widget.control.triggerEvent("change_start", snapValue(value).toString());
       },
-      onChangeEnd: (double value) {
+      onChangeEnd: disabled ? null : (double value) {
         widget.control.triggerEvent("change_end", snapValue(value).toString());
       },
       innerWidget: (double value) {
@@ -180,7 +210,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
           return Center(child: Text(
             displayText,
             style: TextStyle(
-              fontSize: sliderSize / 5,
+              fontSize: innerTextSize ?? sliderSize / 5,
               fontWeight: FontWeight.bold,
               color: innerTextColor,
             ),
@@ -191,7 +221,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
           return Center(child: Text(
             displayText,
             style: TextStyle(
-              fontSize: sliderSize / 8,
+              fontSize: innerTextSize ?? sliderSize / 8,
               fontWeight: FontWeight.bold,
               color: innerTextColor,
             ),
@@ -200,13 +230,17 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
         return Center(child: Text(
           key,
           style: TextStyle(
-            fontSize: sliderSize / 5,
+            fontSize: innerTextSize ?? sliderSize / 5,
             fontWeight: FontWeight.bold,
             color: innerTextColor,
           ),
         ));
       },
     );
+
+    if (disabled) {
+      myControl = Opacity(opacity: 0.5, child: myControl);
+    }
 
     return LayoutControl(control: widget.control, child: myControl);
   }

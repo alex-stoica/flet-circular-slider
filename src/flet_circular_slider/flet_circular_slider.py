@@ -43,12 +43,21 @@ class FletCircularSlider(ft.LayoutControl):
     hide_shadow: bool = False
     progress_bar_start_color: Optional[ft.ColorValue] = None
     progress_bar_end_color: Optional[ft.ColorValue] = None
+    progress_bar_colors: Optional[list[ft.ColorValue]] = None
+
+    # Interaction
+    disabled: bool = False
 
     # Labels
     top_label: Optional[str] = None
     bottom_label: Optional[str] = None
     inner_text: Optional[str] = None
     inner_text_color: Optional[ft.ColorValue] = None
+    inner_text_size: Optional[float] = None
+    top_label_color: Optional[ft.ColorValue] = None
+    top_label_size: Optional[float] = None
+    bottom_label_color: Optional[ft.ColorValue] = None
+    bottom_label_size: Optional[float] = None
     label_formatter: Optional[Callable[[float], str]] = field(default=None, metadata={"skip": True})
     label_map: Optional[dict[str, str]] = None
 
