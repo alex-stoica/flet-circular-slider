@@ -111,10 +111,16 @@ slider = FletCircularSlider(
 | `hide_shadow` | `bool` | `False` | Remove the shadow |
 | `inner_text_color` | `ColorValue` | gradient end | Center text color |
 | `inner_text_size` | `float` | auto | Override center text font size |
+| `inner_text_font_weight` | `str` | `bold` | Center text font weight (e.g. `"w300"`, `"bold"`) |
+| `inner_text_font_family` | `str` | none | Center text font family |
 | `top_label_color` | `ColorValue` | white70 | Top label text color |
 | `top_label_size` | `float` | `12` | Top label font size |
+| `top_label_font_weight` | `str` | `w600` | Top label font weight |
+| `top_label_font_family` | `str` | none | Top label font family |
 | `bottom_label_color` | `ColorValue` | white70 | Bottom label text color |
 | `bottom_label_size` | `float` | `12` | Bottom label font size |
+| `bottom_label_font_weight` | `str` | `w600` | Bottom label font weight |
+| `bottom_label_font_family` | `str` | none | Bottom label font family |
 | | | | |
 | `disabled` | `bool` | `False` | Disable interaction (dims to 50% opacity) |
 | | | | |

@@ -54,10 +54,16 @@ class FletCircularSlider(ft.LayoutControl):
     inner_text: Optional[str] = None
     inner_text_color: Optional[ft.ColorValue] = None
     inner_text_size: Optional[float] = None
+    inner_text_font_weight: Optional[str] = None
+    inner_text_font_family: Optional[str] = None
     top_label_color: Optional[ft.ColorValue] = None
     top_label_size: Optional[float] = None
+    top_label_font_weight: Optional[str] = None
+    top_label_font_family: Optional[str] = None
     bottom_label_color: Optional[ft.ColorValue] = None
     bottom_label_size: Optional[float] = None
+    bottom_label_font_weight: Optional[str] = None
+    bottom_label_font_family: Optional[str] = None
     label_formatter: Optional[Callable[[float], str]] = field(default=None, metadata={"skip": True})
     label_map: Optional[dict[str, str]] = None
 

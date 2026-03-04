@@ -11,7 +11,7 @@ dependencies:
   flet: ">=0.80.5 <2.0.0"
   flutter:
     sdk: flutter
-  sleek_circular_slider: ^2.0.1
+  sleek_circular_slider: ^2.1.0
 
 dev_dependencies:
   flutter_test:

@@ -124,10 +124,16 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
 
     // Text styling
     double? innerTextSize = widget.control.getDouble("inner_text_size");
+    String? innerTextFontWeight = widget.control.getString("inner_text_font_weight");
+    String? innerTextFontFamily = widget.control.getString("inner_text_font_family");
     Color? topLabelColor = widget.control.getColor("top_label_color", context);
     double? topLabelSize = widget.control.getDouble("top_label_size");
+    String? topLabelFontWeight = widget.control.getString("top_label_font_weight");
+    String? topLabelFontFamily = widget.control.getString("top_label_font_family");
     Color? bottomLabelColor = widget.control.getColor("bottom_label_color", context);
     double? bottomLabelSize = widget.control.getDouble("bottom_label_size");
+    String? bottomLabelFontWeight = widget.control.getString("bottom_label_font_weight");
+    String? bottomLabelFontFamily = widget.control.getString("bottom_label_font_family");
 
     // Hoist per-frame values out of closures
     Color innerTextColor = widget.control.getColor("inner_text_color", context) ?? progressBarColors.last;
@@ -165,25 +171,6 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
           shadowColor: shadowColor,
           hideShadow: hideShadow,
         ),
-        infoProperties: InfoProperties(
-          topLabelText: topLabel ?? '',
-          bottomLabelText: bottomLabel ?? '',
-          topLabelStyle: TextStyle(
-            fontSize: topLabelSize ?? 12,
-            color: topLabelColor ?? Colors.white70,
-          ),
-          bottomLabelStyle: TextStyle(
-            fontSize: bottomLabelSize ?? 12,
-            color: bottomLabelColor ?? Colors.white70,
-          ),
-          modifier: (double value) {
-            String key = _canonicalKey(snapValue(value));
-            if (labelMap != null && labelMap.containsKey(key)) {
-              return labelMap[key]!;
-            }
-            return key;
-          },
-        ),
       ),
       onChange: disabled ? null : (double value) {
         double snapped = snapValue(value);
@@ -204,37 +191,63 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
       innerWidget: (double value) {
         double snapped = snapValue(value);
         String key = _canonicalKey(snapped);
-        // Label map lookup takes priority
+
+        // Resolve display text — label_map → inner_text → raw key
+        String displayText;
+        double defaultFontSize;
         if (labelMap != null) {
-          String displayText = labelMap.containsKey(key) ? labelMap[key]! : key;
-          return Center(child: Text(
-            displayText,
-            style: TextStyle(
-              fontSize: innerTextSize ?? sliderSize / 5,
-              fontWeight: FontWeight.bold,
-              color: innerTextColor,
-            ),
-          ));
+          displayText = labelMap.containsKey(key) ? labelMap[key]! : key;
+          defaultFontSize = sliderSize / 5;
+        } else if (innerText != null) {
+          displayText = innerText.replaceAll("{value}", key);
+          defaultFontSize = sliderSize / 8;
+        } else {
+          displayText = key;
+          defaultFontSize = sliderSize / 5;
         }
-        if (innerText != null) {
-          String displayText = innerText.replaceAll("{value}", key);
-          return Center(child: Text(
-            displayText,
-            style: TextStyle(
-              fontSize: innerTextSize ?? sliderSize / 8,
-              fontWeight: FontWeight.bold,
-              color: innerTextColor,
-            ),
-          ));
-        }
-        return Center(child: Text(
-          key,
+
+        Text mainText = Text(
+          displayText,
           style: TextStyle(
-            fontSize: innerTextSize ?? sliderSize / 5,
-            fontWeight: FontWeight.bold,
+            fontSize: innerTextSize ?? defaultFontSize,
+            fontWeight: parseFontWeight(innerTextFontWeight, FontWeight.bold),
+            fontFamily: innerTextFontFamily,
             color: innerTextColor,
           ),
-        ));
+        );
+
+        List<Widget> children = [];
+
+        if (topLabel != null && topLabel.isNotEmpty) {
+          children.add(Text(
+            topLabel,
+            style: TextStyle(
+              fontSize: topLabelSize ?? 12,
+              fontWeight: parseFontWeight(topLabelFontWeight, FontWeight.w600),
+              fontFamily: topLabelFontFamily,
+              color: topLabelColor ?? Colors.white70,
+            ),
+          ));
+        }
+
+        children.add(mainText);
+
+        if (bottomLabel != null && bottomLabel.isNotEmpty) {
+          children.add(Text(
+            bottomLabel,
+            style: TextStyle(
+              fontSize: bottomLabelSize ?? 12,
+              fontWeight: parseFontWeight(bottomLabelFontWeight, FontWeight.w600),
+              fontFamily: bottomLabelFontFamily,
+              color: bottomLabelColor ?? Colors.white70,
+            ),
+          ));
+        }
+
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: children,
+        );
       },
     );
 
