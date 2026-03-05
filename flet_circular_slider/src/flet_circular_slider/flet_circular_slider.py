@@ -75,8 +75,44 @@ class FletCircularSlider(ft.LayoutControl):
     on_change_start: Optional[ControlEventHandler["FletCircularSlider"]] = None
     on_change_end: Optional[ControlEventHandler["FletCircularSlider"]] = None
 
+    _valid_weights = frozenset({
+        "w100", "w200", "w300", "w400", "w500", "w600", "w700", "w800", "w900",
+        "thin", "extraLight", "light", "normal", "medium", "semiBold", "bold", "extraBold", "black",
+    })
+
     def before_update(self):
         super().before_update()
+
+        # --- Property validation ---
+        if self.min >= self.max:
+            raise ValueError(f"min ({self.min}) must be less than max ({self.max})")
+        self.value = max(self.min, min(self.max, self.value))
+
+        if self.divisions is not None and self.divisions <= 0:
+            raise ValueError(f"divisions must be positive, got {self.divisions}")
+        if self.size <= 0:
+            raise ValueError(f"size must be positive, got {self.size}")
+        if not (1 <= self.angle_range <= 360):
+            raise ValueError(f"angle_range must be 1-360, got {self.angle_range}")
+
+        for attr in ("progress_bar_width", "track_width", "handler_size",
+                     "inner_text_size", "top_label_size", "bottom_label_size"):
+            v = getattr(self, attr)
+            if v is not None and v <= 0:
+                raise ValueError(f"{attr} must be positive, got {v}")
+
+        if self.change_throttle_ms is not None and self.change_throttle_ms <= 0:
+            raise ValueError(f"change_throttle_ms must be positive, got {self.change_throttle_ms}")
+
+        for attr in ("inner_text_font_weight", "top_label_font_weight", "bottom_label_font_weight"):
+            v = getattr(self, attr)
+            if v is not None and v not in self._valid_weights:
+                raise ValueError(f"{attr} must be one of {sorted(self._valid_weights)}, got {v!r}")
+
+        if self.progress_bar_colors is not None and len(self.progress_bar_colors) < 2:
+            raise ValueError("progress_bar_colors requires at least 2 colors")
+
+        # --- Label formatter ---
         if self.label_formatter is not None:
             if self.divisions is not None and self.divisions > 0:
                 cache_key = (self.min, self.max, self.divisions, id(self.label_formatter))

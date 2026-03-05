@@ -1,37 +1,19 @@
 [project]
-name = "flet-circular-slider"
-version = "0.5.1"
-description = "Circular/radial slider control for Flet, wrapping sleek_circular_slider Flutter package"
-authors = [
-    { name = "Alex Stoica" }
-]
-license = "MIT"
-readme = "README.md"
+name = "flet-circular-slider-demo"
+version = "0.1.0"
+description = "Demo app for flet-circular-slider"
 requires-python = ">=3.11"
-classifiers = [
-    "License :: OSI Approved :: MIT License",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-]
 dependencies = [
     "flet>=0.80.5",
+    "flet-circular-slider",
 ]
 
-[project.urls]
-Repository = "https://github.com/alex-stoica/flet-circular-slider"
+[tool.flet.app]
+exclude = ["flet_circular_slider"]
 
-[tool.poetry]
-packages = [
-    { include = "flet_circular_slider", from = "src" },
-    { include = "flutter", from = "src" },
-]
-
-[tool.poetry.group.dev.dependencies]
-flet-cli = ">=0.80.5"
-flet-desktop = ">=0.80.5"
+[tool.flet.dev_packages]
+flet-circular-slider = "flet_circular_slider"
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"

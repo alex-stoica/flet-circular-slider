@@ -29,7 +29,6 @@ Thumbs.db
 .claude/
 
 # Flet / Flutter build artifacts
-examples/build/
 
 # Poetry
 poetry.lock
