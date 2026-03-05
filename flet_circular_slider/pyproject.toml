@@ -1,12 +1,12 @@
 [project]
 name = "flet-circular-slider"
-version = "0.6.0"
+version = "0.6.1"
 description = "Circular/radial slider control for Flet, wrapping sleek_circular_slider Flutter package"
 authors = [
     { name = "Alex Stoica" }
 ]
 license = "MIT"
-readme = "README.md"
+readme = "../README.md"
 requires-python = ">=3.11"
 classifiers = [
     "License :: OSI Approved :: MIT License",
@@ -22,16 +22,9 @@ dependencies = [
 [project.urls]
 Repository = "https://github.com/alex-stoica/flet-circular-slider"
 
-[tool.poetry]
-packages = [
-    { include = "flet_circular_slider", from = "src" },
-    { include = "flutter", from = "src" },
-]
-
-[tool.poetry.group.dev.dependencies]
-flet-cli = ">=0.80.5"
-flet-desktop = ">=0.80.5"
+[tool.hatch.build.targets.wheel]
+packages = ["src/flet_circular_slider", "src/flutter"]
 
 [build-system]
-requires = ["poetry-core"]
-build-backend = "poetry.core.masonry.api"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
