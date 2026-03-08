@@ -34,7 +34,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
   void _fireChange(double value, String key) {
     if (key == _lastFiredKey) return;
     _lastFiredKey = key;
-    widget.control.triggerEvent("change", value.toString());
+    widget.control.triggerEvent("change", _canonicalKey(value));
   }
 
   void _flushPending() {
@@ -74,6 +74,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
     double angleRange = widget.control.getDouble("angle_range", 240)!;
     bool counterClockwise = widget.control.getBool("counter_clockwise", false)!;
     bool animationEnabled = widget.control.getBool("animation_enabled", true)!;
+    double animDurationMultiplier = widget.control.getDouble("anim_duration_multiplier", 1.0)!;
 
     // Label map (pre-computed by Python label_formatter, sent as native msgpack map)
     Map? labelMapRaw = widget.control.get("label_map");
@@ -86,6 +87,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
     double progressBarWidth = widget.control.getDouble("progress_bar_width", sliderSize / 10)!;
     double trackWidth = widget.control.getDouble("track_width", progressBarWidth / 4)!;
     double handlerSize = widget.control.getDouble("handler_size", progressBarWidth / 5)!;
+    double shadowWidth = widget.control.getDouble("shadow_width", progressBarWidth * 1.4)!;
 
     // Colors
     Color trackColor = widget.control.getColor("track_color", context) ?? const Color(0xFFDCBEFB);
@@ -159,10 +161,12 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
         angleRange: angleRange,
         counterClockwise: counterClockwise,
         animationEnabled: animationEnabled,
+        animDurationMultiplier: animDurationMultiplier,
         customWidths: CustomSliderWidths(
           trackWidth: trackWidth,
           progressBarWidth: progressBarWidth,
           handlerSize: handlerSize,
+          shadowWidth: shadowWidth,
         ),
         customColors: CustomSliderColors(
           trackColor: trackColor,
@@ -183,10 +187,10 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
       },
       onChangeStart: disabled ? null : (double value) {
         _lastFiredKey = null;
-        widget.control.triggerEvent("change_start", snapValue(value).toString());
+        widget.control.triggerEvent("change_start", _canonicalKey(snapValue(value)));
       },
       onChangeEnd: disabled ? null : (double value) {
-        widget.control.triggerEvent("change_end", snapValue(value).toString());
+        widget.control.triggerEvent("change_end", _canonicalKey(snapValue(value)));
       },
       innerWidget: (double value) {
         double snapped = snapValue(value);

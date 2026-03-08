@@ -22,7 +22,7 @@ def main(page: ft.Page):
     status = ft.Text("Set a duration", color="#888888", size=14)
 
     def on_change(e):
-        mins = int(float(e.data))
+        mins = int(e.data)
         status.value = format_duration(mins)
         status.update()
 

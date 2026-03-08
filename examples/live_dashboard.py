@@ -36,7 +36,7 @@ def main(page: ft.Page):
     )
 
     def _on_main_drag(e):
-        v = int(float(e.data))
+        v = int(e.data)
         status.value = f"Dragged to {v}"
         status.update()
 
@@ -55,7 +55,7 @@ def main(page: ft.Page):
     )
 
     def _on_controller(e):
-        v = int(float(e.data))
+        v = int(e.data)
         slider.value = v
         slider.update()
         status.value = f"Controller: {v}"

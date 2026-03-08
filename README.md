@@ -31,7 +31,7 @@ def main(page: ft.Page):
 
     slider = FletCircularSlider(
         min=0, max=100, value=25, size=200,
-        on_change=lambda e: print(int(float(e.data))),
+        on_change=lambda e: print(int(e.data)),
     )
     page.add(slider)
 
@@ -101,14 +101,16 @@ Individual examples in **[examples/](examples/)**:
 | `max` | `float` | `100` | Maximum value |
 | `value` | `float` | `50` | Initial value |
 | `size` | `float` | `150` | Diameter in pixels |
-| `start_angle` | `float` | `150` | Arc start angle (degrees) |
+| `start_angle` | `float` | `150` | Arc start angle in degrees clockwise from bottom-left (0-359) |
 | `angle_range` | `float` | `240` | Arc total range (degrees) |
 | `counter_clockwise` | `bool` | `False` | Reverse drag direction |
 | `animation_enabled` | `bool` | `True` | Animate to initial value |
+| `anim_duration_multiplier` | `float` | `1.0` | Animation speed multiplier for value changes |
 | | | | |
 | `progress_bar_width` | `float` | `size/10` | Progress arc width |
 | `track_width` | `float` | `bar/4` | Background track width |
 | `handler_size` | `float` | `bar/5` | Drag handle size |
+| `shadow_width` | `float` | `bar*1.4` | Shadow ring thickness |
 | | | | |
 | `progress_bar_start_color` | `ColorValue` | purple | Gradient start color |
 | `progress_bar_end_color` | `ColorValue` | pink | Gradient end color |
@@ -132,7 +134,7 @@ Individual examples in **[examples/](examples/)**:
 | | | | |
 | `disabled` | `bool` | `False` | Disable interaction (dims to 50% opacity) |
 | | | | |
-| `divisions` | `int` | none | Snap to N evenly-spaced steps |
+| `divisions` | `int` | none | Snap to N evenly-spaced steps (none = continuous) |
 | `change_throttle_ms` | `int` | none | Throttle `on_change` events (milliseconds) |
 | | | | |
 | `inner_text` | `str` | raw value | Center text (`{value}` placeholder) |
@@ -145,9 +147,11 @@ Individual examples in **[examples/](examples/)**:
 
 | Event | `e.data` | Description |
 |---|---|---|
-| `on_change` | current value | Fires continuously while dragging (see `change_throttle_ms` to reduce rate) |
-| `on_change_start` | value at drag start | Fires once when drag begins |
-| `on_change_end` | value at drag end | Fires once when drag ends |
+| `on_change` | current value (string) | Fires continuously while dragging (see `change_throttle_ms` to reduce rate) |
+| `on_change_start` | value at drag start (string) | Fires once when drag begins |
+| `on_change_end` | value at drag end (string) | Fires once when drag ends |
+
+`e.data` is a string. For integer divisions use `int(e.data)`. For continuous (no divisions) or fractional ranges use `float(e.data)`.
 
 ## Repo structure
 

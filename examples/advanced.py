@@ -12,7 +12,7 @@ def main(page: ft.Page):
     status = ft.Text("Drag the slider", color="#888888", size=14)
 
     def on_change(e):
-        val = int(float(e.data))
+        val = int(e.data)
         status.value = f"Level: {val}%"
         status.update()
 

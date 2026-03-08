@@ -33,7 +33,7 @@ def main(page: ft.Page):
         top_label="SPEED",
         bottom_label="km/h",
         hide_shadow=True,
-        on_change=lambda e: print(f"speed: {int(float(e.data))}"),
+        on_change=lambda e: print(f"speed: {int(e.data)}"),
     )
 
     # 2. Labels with custom font weight + family — new properties

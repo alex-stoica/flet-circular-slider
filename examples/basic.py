@@ -12,7 +12,7 @@ def main(page: ft.Page):
     output = ft.Text("Drag the slider", color="#888888", size=14)
 
     def on_change(e):
-        output.value = f"Value: {int(float(e.data))}"
+        output.value = f"Value: {int(e.data)}"
         output.update()
 
     slider = FletCircularSlider(

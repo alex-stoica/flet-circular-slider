@@ -23,12 +23,12 @@ def main(page: ft.Page):
     def on_change_counted(e):
         nonlocal event_count, value_changes
         event_count += 1
-        val = float(e.data)
+        val = int(e.data)
         if last_value[0] != val:
             value_changes += 1
             last_value[0] = val
         count_label.value = f"Events fired: {event_count}  |  Value changes: {value_changes}"
-        current_val.value = f"Value: {int(val)}"
+        current_val.value = f"Value: {val}"
         count_label.update()
         current_val.update()
 
@@ -120,7 +120,7 @@ def main(page: ft.Page):
         return f"{h}h {rem}m" if rem else f"{h}h"
 
     def on_int_change(e):
-        int_label.value = fmt_duration(float(e.data))
+        int_label.value = fmt_duration(int(e.data))
         int_label.update()
 
     int_slider = FletCircularSlider(
