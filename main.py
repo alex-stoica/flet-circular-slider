@@ -42,7 +42,7 @@ def main(page: ft.Page):
         track_color="#1a1a3a",
         inner_text_color=ACCENT2,
         hide_shadow=True,
-        on_change=lambda e: _update_text(basic_status, f"Value: {int(e.data)}"),
+        on_change=lambda e: _update_text(basic_status, f"Value: {int(float(e.data))}"),
     )
 
     # ── 2. Styled ──
@@ -62,11 +62,11 @@ def main(page: ft.Page):
         inner_text_size=28,
         inner_text_font_weight="bold",
         hide_shadow=True,
-        on_change=lambda e: _update_text(styled_status, f"Styled: {int(e.data)}"),
+        on_change=lambda e: _update_text(styled_status, f"Styled: {int(float(e.data))}"),
     )
 
     # ── 3. Duration picker ──
-    duration_status = ft.Text("0 min", color="#888888", size=14)
+    duration_status = ft.Text("15 min", color="#888888", size=14)
 
     def format_duration(val: float) -> str:
         return f"{int(val)} min"
@@ -83,7 +83,7 @@ def main(page: ft.Page):
         inner_text_color="#CE93D8",
         hide_shadow=True,
         label_formatter=format_duration,
-        on_change=lambda e: _update_text(duration_status, format_duration(int(e.data))),
+        on_change=lambda e: _update_text(duration_status, format_duration(int(float(e.data)))),
     )
 
     # ── 4. Disabled toggle ──
@@ -158,7 +158,7 @@ def main(page: ft.Page):
     )
 
     def on_ctrl_change(e):
-        v = int(e.data)
+        v = int(float(e.data))
         big_slider.value = v
         big_slider.update()
         ctrl_status.value = f"Controller -> {v}"
@@ -184,7 +184,7 @@ def main(page: ft.Page):
 
     def log_event(event_type: str):
         def handler(e):
-            val = int(e.data)
+            val = int(float(e.data))
             entry = ft.Text(f"{event_type}: {val}", size=11, color="#aaaaaa")
             event_log.controls.append(entry)
             if len(event_log.controls) > 30:
