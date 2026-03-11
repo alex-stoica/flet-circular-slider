@@ -1,9 +1,9 @@
-"""Live dashboard — full showcase of programmatic value updates.
+"""Live dashboard -- full showcase of programmatic value updates.
 
 Three ways to drive the main slider (all work in flet build web):
-1. Auto-animation on startup — cycles through preset values automatically
-2. Controller slider — drag the small slider to drive the big one
-3. Colored preset squares — click a Container to jump to a value
+1. Auto-animation on startup -- cycles through preset values automatically
+2. Controller slider -- drag the small slider to drive the big one
+3. Colored preset squares -- click a Container to jump to a value
 4. Direct drag on the main slider itself
 """
 
@@ -108,7 +108,7 @@ def main(page: ft.Page):
             status.value = f"Auto-demo: {v}"
             status.update()
             await asyncio.sleep(0.8)
-        status.value = "Done — try the controller or presets"
+        status.value = "Done -- try the controller or presets"
         status.update()
 
     # --- Layout ---

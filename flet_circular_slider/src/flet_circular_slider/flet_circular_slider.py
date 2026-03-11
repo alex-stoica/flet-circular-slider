@@ -22,7 +22,7 @@ class FletCircularSlider(ft.LayoutControl):
     min: float = 0
     max: float = 100
     value: float = 50
-    divisions: Optional[int] = None  # None = continuous, int = snap to N steps
+    divisions: Optional[int] = None  # None = continuous, int = snap to N steps (value + display only; knob tracks continuously)
 
     # Appearance
     size: float = 150
@@ -120,6 +120,11 @@ class FletCircularSlider(ft.LayoutControl):
             raise ValueError("progress_bar_colors requires at least 2 colors")
 
         # --- Label formatter ---
+        if self.label_formatter is not None and self.label_map is not None:
+            raise ValueError(
+                "label_formatter and label_map are mutually exclusive -- "
+                "label_formatter generates label_map automatically"
+            )
         if self.label_formatter is not None:
             if self.divisions is not None and self.divisions > 0:
                 cache_key = (self.min, self.max, self.divisions)
@@ -140,6 +145,6 @@ class FletCircularSlider(ft.LayoutControl):
                 self._label_cache_fn = self.label_formatter
             else:
                 raise ValueError(
-                    "label_formatter requires divisions to be set — "
+                    "label_formatter requires divisions to be set -- "
                     "it controls how many labels are pre-computed"
                 )

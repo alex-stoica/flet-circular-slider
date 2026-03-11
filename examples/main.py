@@ -1,4 +1,4 @@
-"""Programmatic value updates demo — two sliders + auto-animation.
+"""Programmatic value updates demo -- two sliders + auto-animation.
 
 Works in flet build web (no buttons needed). The main slider is driven by:
 1. Auto-animation on load (cycles through preset values)
@@ -72,7 +72,7 @@ def main(page: ft.Page):
             status.value = f"Auto-demo: {v}"
             status.update()
             await asyncio.sleep(1)
-        status.value = "Done — drag either slider"
+        status.value = "Done -- drag either slider"
         status.update()
 
     # --- Layout ---

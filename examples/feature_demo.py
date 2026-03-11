@@ -1,4 +1,4 @@
-"""Feature demo — disabled mode, text styling, and multi-color gradients."""
+"""Feature demo -- disabled mode, text styling, and multi-color gradients."""
 
 import flet as ft
 from flet_circular_slider import FletCircularSlider
@@ -11,7 +11,7 @@ def main(page: ft.Page):
     page.padding = 40
     page.scroll = ft.ScrollMode.AUTO
 
-    # ── Slider 1: disabled gauge with toggle ──
+    # -- Slider 1: disabled gauge with toggle --
 
     temp_slider = FletCircularSlider(
         min=0,
@@ -50,7 +50,7 @@ def main(page: ft.Page):
         temp_slider.update()
         toggle_btn.update()
 
-    # ── Slider 2: text styling — default vs custom side by side ──
+    # -- Slider 2: text styling -- default vs custom side by side --
 
     default_slider = FletCircularSlider(
         min=0,
@@ -86,7 +86,7 @@ def main(page: ft.Page):
         hide_shadow=True,
     )
 
-    # ── Slider 3: rainbow gradient ──
+    # -- Slider 3: rainbow gradient --
 
     rainbow_slider = FletCircularSlider(
         min=0,
@@ -107,7 +107,7 @@ def main(page: ft.Page):
         hide_shadow=True,
     )
 
-    # ── Layout ──
+    # -- Layout --
 
     def _section(title, content):
         return ft.Column(

@@ -98,7 +98,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
     // Disabled mode
     bool disabled = widget.control.getBool("disabled", false)!;
 
-    // Gradient colors for progress bar — multi-color list takes priority
+    // Gradient colors for progress bar -- multi-color list takes priority
     List<Color> progressBarColors;
     List? rawBarColors = widget.control.get("progress_bar_colors");
     if (rawBarColors != null && rawBarColors.isNotEmpty) {
@@ -107,7 +107,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
           .map((c) => parseColor(c.toString(), theme))
           .whereType<Color>()
           .toList();
-      if (progressBarColors.isEmpty) {
+      if (progressBarColors.length < 2) {
         progressBarColors = [const Color(0xFF1E003B), const Color(0xFFEC008A), const Color(0xFF6285DA)];
       }
     } else {
@@ -142,7 +142,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
     String? innerText = widget.control.getString("inner_text");
     int? throttleMs = widget.control.getInt("change_throttle_ms");
 
-    // Local snap function — replaces instance method, avoids re-reading control properties per frame
+    // Local snap function -- replaces instance method, avoids re-reading control properties per frame
     int? divisions = widget.control.getInt("divisions");
     double? step = (divisions != null && divisions > 0) ? (max - min) / divisions : null;
 
@@ -196,7 +196,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
         double snapped = snapValue(value);
         String key = _canonicalKey(snapped);
 
-        // Resolve display text — label_map → inner_text → raw key
+        // Resolve display text -- label_map > inner_text > raw key
         String displayText;
         double defaultFontSize;
         if (labelMap != null) {

@@ -3,7 +3,7 @@ name: Create GitHub release
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.0"  # only major/minor (v1.0.0, v0.4.0) — skips patches (v0.4.1)
+      - "v[0-9]+.[0-9]+.0"  # only major/minor (v1.0.0, v0.4.0) -- skips patches (v0.4.1)
 
 permissions:
   contents: write

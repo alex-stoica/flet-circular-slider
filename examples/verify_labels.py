@@ -1,11 +1,11 @@
 """Verification demo for label fix and new text styling properties.
 
 What to watch for:
-1. LEFT slider — "SPEED" above, "km/h" below, bold number in the center.
+1. LEFT slider -- "SPEED" above, "km/h" below, bold number in the center.
    These labels were DEAD before the fix (innerWidget replaced SliderLabel entirely).
-2. CENTER slider — "TEMP" in monospace font, thin (w300) center number, "celsius" in monospace.
+2. CENTER slider -- "TEMP" in monospace font, thin (w300) center number, "celsius" in monospace.
    Demonstrates inner_text_font_weight, inner_text_font_family, top/bottom_label_font_family.
-3. RIGHT slider — plain number, no labels at all.
+3. RIGHT slider -- plain number, no labels at all.
    Should look identical to the old behavior (no layout shift from the Column change).
 """
 
@@ -19,7 +19,7 @@ def main(page: ft.Page):
     page.vertical_alignment = ft.MainAxisAlignment.CENTER
     page.padding = 30
 
-    # 1. Labels with default styling — core bug fix verification
+    # 1. Labels with default styling -- core bug fix verification
     labels_slider = FletCircularSlider(
         min=0,
         max=200,
@@ -36,7 +36,7 @@ def main(page: ft.Page):
         on_change=lambda e: print(f"speed: {int(e.data)}"),
     )
 
-    # 2. Labels with custom font weight + family — new properties
+    # 2. Labels with custom font weight + family -- new properties
     styled_slider = FletCircularSlider(
         min=0,
         max=50,
@@ -61,7 +61,7 @@ def main(page: ft.Page):
         hide_shadow=True,
     )
 
-    # 3. No labels — backward compatibility check
+    # 3. No labels -- backward compatibility check
     plain_slider = FletCircularSlider(
         min=0,
         max=100,

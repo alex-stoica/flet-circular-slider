@@ -1,4 +1,4 @@
-"""Advanced circular slider — every customization option demonstrated."""
+"""Advanced circular slider -- every customization option demonstrated."""
 
 import flet as ft
 from flet_circular_slider import FletCircularSlider
@@ -36,7 +36,7 @@ def main(page: ft.Page):
         progress_bar_width=20,
         track_width=4,
         handler_size=10,
-        # Colors — cyan-to-green neon theme
+        # Colors -- cyan-to-green neon theme
         progress_bar_start_color="#00E5FF",
         progress_bar_end_color="#76FF03",
         track_color="#1a1a3a",

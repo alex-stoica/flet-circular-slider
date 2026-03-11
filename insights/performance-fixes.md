@@ -1,4 +1,4 @@
-# Performance fixes — learnings
+# Performance fixes -- learnings
 
 ## Flet control lifecycle
 
@@ -6,7 +6,7 @@
   property changes. Any expensive work here (dict construction, formatting) adds latency to every
   update cycle, even when unrelated properties changed.
 - Non-field instance attributes on dataclass controls (e.g. `self._label_cache_key`) are safe for
-  caching — they're invisible to flet's serialization and won't be sent over the wire.
+  caching -- they're invisible to flet's serialization and won't be sent over the wire.
 
 ## triggerEvent cost
 
@@ -19,7 +19,7 @@
 
 - `widget.control` is mutated in-place by flet when properties change. `didUpdateWidget` won't fire
   for property-only changes (same widget identity). This means you can't rely on widget lifecycle
-  to detect property changes — you must re-read from `widget.control` in `build()`.
+  to detect property changes -- you must re-read from `widget.control` in `build()`.
 
 ## SleekCircularSlider per-frame callbacks
 
@@ -33,10 +33,10 @@
 
 - Python generates `label_map` keys, Dart looks them up. Both sides **must** produce identical
   strings for the same float value.
-- `round()` in Python returns int, `.round()` in Dart returns int — but both silently break for
+- `round()` in Python returns int, `.round()` in Dart returns int -- but both silently break for
   fractional ranges (e.g. min=0, max=1, divisions=4 produces values 0.25, 0.5, 0.75 which all
   round to 0 or 1).
-- Solution: `_canonical_key` / `_canonicalKey` — format to 10 decimal places, strip trailing zeros.
+- Solution: `_canonical_key` / `_canonicalKey` -- format to 10 decimal places, strip trailing zeros.
   Both sides use IEEE 754 doubles and the same `min + i * step` formula, so the raw values match
   exactly and the string formatting produces identical keys.
 
@@ -44,5 +44,5 @@
 
 - Using `round()` for keys worked perfectly for the original use case (duration picker with integer
   minutes). The bug only surfaces with fractional ranges, which no existing example exercises. The
-  implicit assumption was "slider values are integers" — reasonable given the examples, but wrong
+  implicit assumption was "slider values are integers" -- reasonable given the examples, but wrong
   as a general invariant.

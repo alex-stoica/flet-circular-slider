@@ -1,4 +1,4 @@
-"""Performance and correctness demo — shows event dedup + fractional range fix."""
+"""Performance and correctness demo -- shows event dedup + fractional range fix."""
 
 import flet as ft
 from flet_circular_slider import FletCircularSlider
@@ -99,7 +99,7 @@ def main(page: ft.Page):
         ft.Container(height=30),
         ft.Text("2. Fractional range fix", size=16, weight=ft.FontWeight.W_600, color="#FF6B35"),
         ft.Text(
-            "min=0, max=1, divisions=4. Labels should show 0%, 25%, 50%, 75%, 100% — not all '0%' or '1%'.",
+            "min=0, max=1, divisions=4. Labels should show 0%, 25%, 50%, 75%, 100% -- not all '0%' or '1%'.",
             color="#777777", size=12,
         ),
         ft.Container(height=10),

@@ -29,7 +29,7 @@ def main(page: ft.Page):
     page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
     page.padding = 30
 
-    # ── 1. Basic ──
+    # -- 1. Basic --
     basic_status = ft.Text("Drag the slider", color="#888888", size=14)
     basic_slider = FletCircularSlider(
         min=0,
@@ -45,7 +45,7 @@ def main(page: ft.Page):
         on_change=lambda e: _update_text(basic_status, f"Value: {int(float(e.data))}"),
     )
 
-    # ── 2. Styled ──
+    # -- 2. Styled --
     styled_status = ft.Text("Multi-color gradient", color="#888888", size=14)
     styled_slider = FletCircularSlider(
         min=0,
@@ -65,7 +65,7 @@ def main(page: ft.Page):
         on_change=lambda e: _update_text(styled_status, f"Styled: {int(float(e.data))}"),
     )
 
-    # ── 3. Duration picker ──
+    # -- 3. Duration picker --
     duration_status = ft.Text("15 min", color="#888888", size=14)
 
     def format_duration(val: float) -> str:
@@ -86,7 +86,7 @@ def main(page: ft.Page):
         on_change=lambda e: _update_text(duration_status, format_duration(int(float(e.data)))),
     )
 
-    # ── 4. Disabled toggle ──
+    # -- 4. Disabled toggle --
     disabled_status = ft.Text("Slider is enabled", color="#888888", size=14)
     disabled_slider = FletCircularSlider(
         min=0,
@@ -111,7 +111,7 @@ def main(page: ft.Page):
 
     toggle_btn = ft.ElevatedButton("Toggle disabled", on_click=toggle_disabled)
 
-    # ── 5. Programmatic update ──
+    # -- 5. Programmatic update --
     prog_status = ft.Text("Press a button", color="#888888", size=14)
     prog_slider = FletCircularSlider(
         min=0,
@@ -141,7 +141,7 @@ def main(page: ft.Page):
         wrap=True,
     )
 
-    # ── 6. Controller ──
+    # -- 6. Controller --
     ctrl_status = ft.Text("Small drives big", color="#888888", size=14)
     big_slider = FletCircularSlider(
         min=0,
@@ -179,7 +179,7 @@ def main(page: ft.Page):
         on_change=on_ctrl_change,
     )
 
-    # ── 7. Event log ──
+    # -- 7. Event log --
     event_log = ft.Column([], scroll=ft.ScrollMode.AUTO, height=150)
 
     def log_event(event_type: str):
@@ -212,7 +212,7 @@ def main(page: ft.Page):
         text_ctrl.value = value
         text_ctrl.update()
 
-    # ── Layout ──
+    # -- Layout --
     page.add(
         ft.Text("flet-circular-slider demo", size=26, weight=ft.FontWeight.BOLD, color="#ffffff"),
         hint("Scroll to see all 7 sections"),

@@ -18,7 +18,7 @@ dependencies = ["flet-circular-slider>=0.6.0"]
 flet-circular-slider = ">=0.5.0"
 ```
 
-Then run `flet build` (see [Building](#building) below). `flet run` alone won't compile extensions — you'll get "Unknown control" without a build step.
+Then run `flet build` (see [Building](#building) below). `flet run` alone won't compile extensions -- you'll get "Unknown control" without a build step.
 
 ## Quick Start
 
@@ -40,7 +40,7 @@ ft.run(main)
 
 ## Programmatic Updates
 
-Set the slider value from Python code — the widget animates smoothly to the new position:
+Set the slider value from Python code -- the widget animates smoothly to the new position:
 
 ```python
 slider = FletCircularSlider(min=0, max=100, value=25, size=200)
@@ -75,7 +75,7 @@ slider = FletCircularSlider(
 )
 ```
 
-`divisions` is required when using `label_formatter` — it controls how many labels are pre-computed and sent to the Flutter side.
+`divisions` is required when using `label_formatter` -- it controls how many labels are pre-computed and sent to the Flutter side.
 
 ## Demo app
 
@@ -87,11 +87,11 @@ Run it with `flet build apk` from the project root, or use `python build.py` for
 
 Individual examples in **[examples/](examples/)**:
 
-- **[basic.py](examples/basic.py)** — Minimal slider with `on_change` event
-- **[advanced.py](examples/advanced.py)** — Custom colors, geometry, labels, sizing, and all three events
-- **[duration_picker.py](examples/duration_picker.py)** — Duration picker using `label_formatter` to display "1h 30m" style labels
-- **[live_dashboard.py](examples/live_dashboard.py)** — Full dashboard with auto-animation, controller slider, and colored presets
-- **[feature_demo.py](examples/feature_demo.py)** — Disabled mode, text styling, and multi-color gradients
+- **[basic.py](examples/basic.py)** -- Minimal slider with `on_change` event
+- **[advanced.py](examples/advanced.py)** -- Custom colors, geometry, labels, sizing, and all three events
+- **[duration_picker.py](examples/duration_picker.py)** -- Duration picker using `label_formatter` to display "1h 30m" style labels
+- **[live_dashboard.py](examples/live_dashboard.py)** -- Full dashboard with auto-animation, controller slider, and colored presets
+- **[feature_demo.py](examples/feature_demo.py)** -- Disabled mode, text styling, and multi-color gradients
 
 ## Properties
 
@@ -134,7 +134,7 @@ Individual examples in **[examples/](examples/)**:
 | | | | |
 | `disabled` | `bool` | `False` | Disable interaction (dims to 50% opacity) |
 | | | | |
-| `divisions` | `int` | none | Snap to N evenly-spaced steps (none = continuous) |
+| `divisions` | `int` | none | Snap reported value and display to N steps (knob tracks continuously) |
 | `change_throttle_ms` | `int` | none | Throttle `on_change` events (milliseconds) |
 | | | | |
 | `inner_text` | `str` | raw value | Center text (`{value}` placeholder) |

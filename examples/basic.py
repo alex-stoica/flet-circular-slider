@@ -1,4 +1,4 @@
-"""Minimal circular slider — core values + on_change event."""
+"""Minimal circular slider -- core values + on_change event."""
 
 import flet as ft
 from flet_circular_slider import FletCircularSlider
