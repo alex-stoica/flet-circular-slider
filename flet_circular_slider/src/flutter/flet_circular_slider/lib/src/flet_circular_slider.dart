@@ -148,7 +148,7 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
 
     double snapValue(double value) {
       if (step == null) return value;
-      return ((value - min) / step!).roundToDouble() * step! + min;
+      return ((value - min) / step).roundToDouble() * step + min;
     }
 
     Widget myControl = SleekCircularSlider(
@@ -190,7 +190,12 @@ class _FletCircularSliderControlState extends State<FletCircularSliderControl> {
         widget.control.triggerEvent("change_start", _canonicalKey(snapValue(value)));
       },
       onChangeEnd: disabled ? null : (double value) {
-        widget.control.triggerEvent("change_end", _canonicalKey(snapValue(value)));
+        double snapped = snapValue(value);
+        // Sync the dragged value back to the Python `value` property. Done only
+        // on drag end: mid-drag patches would rebuild SleekCircularSlider via
+        // initialValue and disrupt the gesture.
+        widget.control.updateProperties({"value": snapped});
+        widget.control.triggerEvent("change_end", _canonicalKey(snapped));
       },
       innerWidget: (double value) {
         double snapped = snapValue(value);

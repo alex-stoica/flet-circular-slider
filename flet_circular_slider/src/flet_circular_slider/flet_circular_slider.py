@@ -21,7 +21,7 @@ class FletCircularSlider(ft.LayoutControl):
     # Core values
     min: float = 0
     max: float = 100
-    value: float = 50
+    value: float = 50  # synced back automatically when the user finishes a drag
     divisions: Optional[int] = None  # None = continuous, int = snap to N steps (value + display only; knob tracks continuously)
 
     # Appearance
