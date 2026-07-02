@@ -51,7 +51,7 @@ slider.value = 75
 slider.update()  # slider animates to 75
 ```
 
-This works for dashboards, timers, or any scenario where Python drives the value. See the root **[main.py](main.py)** demo app for a full showcase with all features.
+This works for dashboards, timers, or any scenario where Python drives the value. The sync is two-way: when the user finishes a drag, `slider.value` already holds the new value. See the root **[main.py](main.py)** demo app for a full showcase with all features.
 
 ## Label Formatting
 
@@ -99,7 +99,7 @@ Individual examples in **[examples/](examples/)**:
 |---|---|---|---|
 | `min` | `float` | `0` | Minimum value |
 | `max` | `float` | `100` | Maximum value |
-| `value` | `float` | `50` | Initial value |
+| `value` | `float` | `50` | Current value (synced back automatically when a drag ends) |
 | `size` | `float` | `150` | Diameter in pixels |
 | `start_angle` | `float` | `150` | Arc start angle in degrees clockwise from bottom-left (0-359) |
 | `angle_range` | `float` | `240` | Arc total range (degrees) |
